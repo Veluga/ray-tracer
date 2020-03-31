@@ -8,6 +8,7 @@ void gen_simple_fading(int w, int h) {
   std::cout << "P3\n" << image_height << " " << image_width << "\n255\n";
 
   for (int i = image_height - 1; i >= 0; i--) {
+    std::cerr << "\nScanlines remaining: " << i << ' ' << std::flush;
     for (int j = 0; j < image_width; j++) {
       auto r = double(j) / image_width;
       auto g = double(i) / image_height;
@@ -18,4 +19,5 @@ void gen_simple_fading(int w, int h) {
       std::cout << ir << ' ' << ig << ' ' << ib << '\n';
     }
   }
+  std::cerr << "\nDone.\n";
 }

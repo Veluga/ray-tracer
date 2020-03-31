@@ -6,6 +6,7 @@
 void gen_simple_fading(int, int);
 
 class vec3 {
+public:
   vec3();
   vec3(double, double, double);
 
@@ -25,7 +26,6 @@ class vec3 {
   double length_squared() const;
   void write_color(std::ostream &);
 
-public:
   double e[3];
 };
 
