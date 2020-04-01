@@ -1,4 +1,6 @@
-#include "ray_tracer.hpp"
+#include "ray.hpp"
+#include "vec3.hpp"
+
 #include <cmath>
 #include <iostream>
 

@@ -1,4 +1,4 @@
-#include "ray_tracer.hpp"
+#include "ray.hpp"
 
 ray::ray(){};
 

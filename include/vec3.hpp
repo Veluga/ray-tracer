@@ -1,9 +1,7 @@
-#ifndef RAYTRACER_H
-#define RAYTRACER_H
+#ifndef RAYTRACER_VEC3_H
+#define RAYTRACER_VEC3_H
 
 #include <iostream>
-
-void gen_simple_fading(int, int);
 
 class vec3 {
 public:
@@ -27,20 +25,6 @@ public:
   void write_color(std::ostream &);
 
   double e[3];
-};
-
-class ray {
-public:
-  ray();
-  ray(const vec3 &, const vec3 &);
-
-  vec3 origin() const;
-  vec3 direction() const;
-
-  vec3 at(double) const;
-
-  vec3 orig;
-  vec3 dir;
 };
 
 // vec3 utility functions

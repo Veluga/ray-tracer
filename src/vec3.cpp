@@ -1,4 +1,4 @@
-#include "ray_tracer.hpp"
+#include "vec3.hpp"
 #include <cmath>
 
 vec3::vec3() : e{0, 0, 0} {}
