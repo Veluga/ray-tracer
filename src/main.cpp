@@ -1,32 +1,21 @@
 #include "ray.hpp"
+#include "sphere.hpp"
 #include "vec3.hpp"
 
 #include <cmath>
 #include <iostream>
 
-double hit_sphere(const vec3 &center, double radius, const ray &r) {
-  vec3 oc = r.origin() - center;
-  auto a = r.direction().length_squared();
-  auto half_b = dot(oc, r.direction());
-  auto c = oc.length_squared() - radius * radius;
-  auto discriminant = half_b * half_b - a * c;
-  if (discriminant < 0) {
-    return -1.0;
-  } else {
-    return (-half_b - std::sqrt(discriminant)) / a;
-  }
-}
-
 vec3 ray_color(const ray &r) {
-  auto t = hit_sphere(vec3(0, 0, -1), 0.5, r);
-  if (t > 0.0) {
-    // Create normal and map to interval [0, 1]
-    vec3 N = unit_vector(r.at(t) - vec3(0, 0, -1));
-    return 0.5 * vec3(N.x() + 1, N.y() + 1, N.z() + 1);
+  sphere s(vec3(0, 0, -1), 0.5);
+  struct hit_record hit;
+  if (s.hit(r, -1, 1, hit)) {
+    return 0.5 *
+           vec3(hit.normal.x() + 1, hit.normal.y() + 1, hit.normal.z() + 1);
+  } else {
+    vec3 unit_direction = unit_vector(r.direction());
+    auto t = 0.5 * (unit_direction.y() + 1.0);
+    return (1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
   }
-  vec3 unit_direction = unit_vector(r.direction());
-  t = 0.5 * (unit_direction.y() + 1.0);
-  return (1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
 }
 
 int main() {
