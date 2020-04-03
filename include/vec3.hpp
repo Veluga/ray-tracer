@@ -22,7 +22,7 @@ public:
 
   double length() const;
   double length_squared() const;
-  void write_color(std::ostream &);
+  void write_color(std::ostream &, int);
 
   double e[3];
 };

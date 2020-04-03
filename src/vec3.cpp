@@ -1,4 +1,4 @@
-#include "vec3.hpp"
+#include "raytracer.hpp"
 #include <cmath>
 
 vec3::vec3() : e{0, 0, 0} {}
@@ -38,8 +38,9 @@ double vec3::length_squared() const {
 
 double vec3::length() const { return std::sqrt(this->length_squared()); }
 
-void vec3::write_color(std::ostream &out) {
-  out << static_cast<int>(255.999 * this->e[0]) << ' '
-      << static_cast<int>(255.999 * this->e[1]) << ' '
-      << static_cast<int>(255.999 * this->e[2]) << '\n';
+void vec3::write_color(std::ostream &out, int samples_per_pixel) {
+  auto scale = 1.0 / samples_per_pixel;
+  out << static_cast<int>(256 * clamp(this->e[0] * scale, 0.0, 0.999)) << ' '
+      << static_cast<int>(256 * clamp(this->e[1] * scale, 0.0, 0.999)) << ' '
+      << static_cast<int>(256 * clamp(this->e[2] * scale, 0.0, 0.999)) << '\n';
 }

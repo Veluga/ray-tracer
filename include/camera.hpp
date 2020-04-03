@@ -5,6 +5,7 @@
 
 class camera {
 public:
+  camera();
   ray get_ray(double, double);
 
   vec3 origin;

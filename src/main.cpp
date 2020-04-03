@@ -1,3 +1,4 @@
+#include "camera.hpp"
 #include "hittable_list.hpp"
 #include "raytracer.hpp"
 #include "sphere.hpp"
@@ -19,6 +20,7 @@ vec3 ray_color(const ray &r, hittable_list world) {
 int main() {
   int image_width = 200;
   int image_height = 100;
+  int samples_per_pixel = 100;
 
   std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 
@@ -30,15 +32,18 @@ int main() {
   hittable_list world;
   world.add(std::make_shared<sphere>(vec3(0, 0, -1), 0.5));
   world.add(std::make_shared<sphere>(vec3(0, -100.5, -1), 100));
-
+  camera cam;
   for (int i = image_height - 1; i >= 0; i--) {
     std::cerr << "\nScanlines remaining: " << i << ' ' << std::flush;
     for (int j = 0; j < image_width; j++) {
-      auto u = static_cast<double>(j) / image_width;
-      auto v = static_cast<double>(i) / image_height;
-      ray r(origin, lower_left_corner + u * horizontal + v * vertical);
-      vec3 color = ray_color(r, world);
-      color.write_color(std::cout);
+      vec3 color(0, 0, 0);
+      for (int s = 0; s < samples_per_pixel; s++) {
+        auto u = (j + random_double()) / image_width;
+        auto v = (i + random_double()) / image_height;
+        ray r = cam.get_ray(u, v);
+        color += ray_color(r, world);
+      }
+      color.write_color(std::cout, samples_per_pixel);
     }
   }
   std::cerr << "\nDone.\n";
