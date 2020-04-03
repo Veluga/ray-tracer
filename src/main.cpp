@@ -1,16 +1,14 @@
-#include "ray.hpp"
+#include "hittable_list.hpp"
+#include "raytracer.hpp"
 #include "sphere.hpp"
-#include "vec3.hpp"
 
 #include <cmath>
 #include <iostream>
 
-vec3 ray_color(const ray &r) {
-  sphere s(vec3(0, 0, -1), 0.5);
+vec3 ray_color(const ray &r, hittable_list world) {
   struct hit_record hit;
-  if (s.hit(r, -1, 1, hit)) {
-    return 0.5 *
-           vec3(hit.normal.x() + 1, hit.normal.y() + 1, hit.normal.z() + 1);
+  if (world.hit(r, 0, infinity, hit)) {
+    return 0.5 * (hit.normal + vec3(1, 1, 1));
   } else {
     vec3 unit_direction = unit_vector(r.direction());
     auto t = 0.5 * (unit_direction.y() + 1.0);
@@ -29,13 +27,17 @@ int main() {
   vec3 vertical(0.0, 2.0, 0.0);
   vec3 origin(0.0, 0.0, 0.0);
 
+  hittable_list world;
+  world.add(std::make_shared<sphere>(vec3(0, 0, -1), 0.5));
+  world.add(std::make_shared<sphere>(vec3(0, -100.5, -1), 100));
+
   for (int i = image_height - 1; i >= 0; i--) {
     std::cerr << "\nScanlines remaining: " << i << ' ' << std::flush;
     for (int j = 0; j < image_width; j++) {
       auto u = static_cast<double>(j) / image_width;
       auto v = static_cast<double>(i) / image_height;
       ray r(origin, lower_left_corner + u * horizontal + v * vertical);
-      vec3 color = ray_color(r);
+      vec3 color = ray_color(r, world);
       color.write_color(std::cout);
     }
   }

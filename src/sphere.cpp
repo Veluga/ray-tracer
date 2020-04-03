@@ -18,13 +18,13 @@ bool sphere::hit(const ray &ray, double t_min, double t_max,
     auto t = (-half_b - root) / a;
     if (t < t_max && t > t_min) {
       rec.p = ray.at(t);
-      rec.normal = unit_vector(rec.p - this->center);
+      rec.set_face_normal(ray, unit_vector(rec.p - this->center));
       return true;
     }
     t = (-half_b + root) / a;
     if (t < t_max && t > t_min) {
       rec.p = ray.at(t);
-      rec.normal = unit_vector(rec.p - this->center);
+      rec.set_face_normal(ray, unit_vector(rec.p - this->center));
       return true;
     }
   }
