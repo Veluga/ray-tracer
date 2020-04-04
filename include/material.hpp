@@ -20,10 +20,11 @@ public:
 
 class metal : public material {
 public:
-  metal(const vec3 &);
+  metal(const vec3 &, double);
   bool scatter(const ray &r_in, const hit_record &hit, vec3 &attenuation,
                ray &scattered) const;
   vec3 albedo;
+  double fuzz;
 };
 
 #endif

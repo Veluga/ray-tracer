@@ -49,9 +49,9 @@ int main() {
       std::make_shared<lambertian>(vec3(0.8, 0.8, 0.0))));
 
   world.add(std::make_shared<sphere>(
-      vec3(1, 0, -1), 0.5, std::make_shared<metal>(vec3(0.8, 0.6, 0.2))));
+      vec3(1, 0, -1), 0.5, std::make_shared<metal>(vec3(0.8, 0.6, 0.2), 0.3)));
   world.add(std::make_shared<sphere>(
-      vec3(-1, 0, -1), 0.5, std::make_shared<metal>(vec3(0.8, 0.8, 0.8))));
+      vec3(-1, 0, -1), 0.5, std::make_shared<metal>(vec3(0.8, 0.8, 0.8), 1)));
   camera cam;
   for (int i = image_height - 1; i >= 0; i--) {
     std::cerr << "\nScanlines remaining: " << i << ' ' << std::flush;
