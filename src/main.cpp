@@ -14,7 +14,7 @@ vec3 ray_color(const ray &r, hittable_list world, int depth) {
   }
 
   if (world.hit(r, 0.001, infinity, hit)) {
-    vec3 target = hit.p + hit.normal + random_in_unit_sphere();
+    vec3 target = hit.p + hit.normal + random_unit_vector();
     return 0.5 * (ray_color(ray(hit.p, target - hit.p), world, depth - 1));
   } else {
     vec3 unit_direction = unit_vector(r.direction());
