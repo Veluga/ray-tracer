@@ -79,4 +79,6 @@ vec3 random_in_unit_sphere();
 
 vec3 random_unit_vector();
 
+vec3 reflect(const vec3 &, const vec3 &);
+
 #endif

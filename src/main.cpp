@@ -1,5 +1,6 @@
 #include "camera.hpp"
 #include "hittable_list.hpp"
+#include "material.hpp"
 #include "raytracer.hpp"
 #include "sphere.hpp"
 
@@ -7,25 +8,29 @@
 #include <iostream>
 
 vec3 ray_color(const ray &r, hittable_list world, int depth) {
-  struct hit_record hit;
+  hit_record hit;
 
   if (depth <= 0) {
     return vec3(0, 0, 0);
   }
 
   if (world.hit(r, 0.001, infinity, hit)) {
-    vec3 target = hit.p + hit.normal + random_unit_vector();
-    return 0.5 * (ray_color(ray(hit.p, target - hit.p), world, depth - 1));
-  } else {
-    vec3 unit_direction = unit_vector(r.direction());
-    auto t = 0.5 * (unit_direction.y() + 1.0);
-    return (1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
+    ray scattered;
+    vec3 attenuation;
+    if (hit.mat_ptr->scatter(r, hit, attenuation, scattered)) {
+      return attenuation * ray_color(scattered, world, depth - 1);
+    }
+    return vec3(0, 0, 0);
   }
+
+  vec3 unit_direction = unit_vector(r.direction());
+  auto t = 0.5 * (unit_direction.y() + 1.0);
+  return (1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
 }
 
 int main() {
-  const int image_width = 200;
-  const int image_height = 100;
+  const int image_width = 600;
+  const int image_height = 300;
   const int samples_per_pixel = 100;
   const int max_depth = 50;
 
@@ -37,8 +42,16 @@ int main() {
   vec3 origin(0.0, 0.0, 0.0);
 
   hittable_list world;
-  world.add(std::make_shared<sphere>(vec3(0, 0, -1), 0.5));
-  world.add(std::make_shared<sphere>(vec3(0, -100.5, -1), 100));
+  world.add(std::make_shared<sphere>(
+      vec3(0, 0, -1), 0.5, std::make_shared<lambertian>(vec3(0.7, 0.3, 0.3))));
+  world.add(std::make_shared<sphere>(
+      vec3(0, -100.5, -1), 100,
+      std::make_shared<lambertian>(vec3(0.8, 0.8, 0.0))));
+
+  world.add(std::make_shared<sphere>(
+      vec3(1, 0, -1), 0.5, std::make_shared<metal>(vec3(0.8, 0.6, 0.2))));
+  world.add(std::make_shared<sphere>(
+      vec3(-1, 0, -1), 0.5, std::make_shared<metal>(vec3(0.8, 0.8, 0.8))));
   camera cam;
   for (int i = image_height - 1; i >= 0; i--) {
     std::cerr << "\nScanlines remaining: " << i << ' ' << std::flush;
