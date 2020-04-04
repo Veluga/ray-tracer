@@ -1,9 +1,6 @@
 #ifndef RAYTRACER_RT_MAIN_H
 #define RAYTRACER_RT_MAIN_H
 
-#include "ray.hpp"
-#include "vec3.hpp"
-
 #include <limits>
 #include <random>
 
@@ -28,6 +25,13 @@ inline double random_double() {
   return rand_generator();
 }
 
+inline double random_double(double min, double max) {
+  static std::uniform_real_distribution<double> distribution(min, max);
+  static std::mt19937 generator;
+  static auto rand_generator = [&]() { return distribution(generator); };
+  return rand_generator();
+}
+
 inline double clamp(double x, double min, double max) {
   if (x > max)
     return max;
@@ -35,5 +39,8 @@ inline double clamp(double x, double min, double max) {
     return min;
   return x;
 }
+
+#include "ray.hpp"
+#include "vec3.hpp"
 
 #endif

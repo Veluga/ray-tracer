@@ -40,7 +40,21 @@ double vec3::length() const { return std::sqrt(this->length_squared()); }
 
 void vec3::write_color(std::ostream &out, int samples_per_pixel) {
   auto scale = 1.0 / samples_per_pixel;
-  out << static_cast<int>(256 * clamp(this->e[0] * scale, 0.0, 0.999)) << ' '
-      << static_cast<int>(256 * clamp(this->e[1] * scale, 0.0, 0.999)) << ' '
-      << static_cast<int>(256 * clamp(this->e[2] * scale, 0.0, 0.999)) << '\n';
+  // Divide the total by the number of samples and gamma-correct
+  // for a gamme of 2.0
+  auto r = sqrt(this->e[0] * scale);
+  auto g = sqrt(this->e[1] * scale);
+  auto b = sqrt(this->e[2] * scale);
+  out << static_cast<int>(256 * clamp(r, 0.0, 0.999)) << ' '
+      << static_cast<int>(256 * clamp(g, 0.0, 0.999)) << ' '
+      << static_cast<int>(256 * clamp(b, 0.0, 0.999)) << '\n';
+}
+
+vec3 random_in_unit_sphere() {
+  while (true) {
+    auto p = vec3::random(-1.0, 1.0);
+    if (p.length_squared() >= 1)
+      continue;
+    return p;
+  }
 }

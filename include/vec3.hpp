@@ -1,6 +1,7 @@
 #ifndef RAYTRACER_VEC3_H
 #define RAYTRACER_VEC3_H
 
+#include "raytracer.hpp"
 #include <iostream>
 
 class vec3 {
@@ -23,6 +24,15 @@ public:
   double length() const;
   double length_squared() const;
   void write_color(std::ostream &, int);
+
+  inline static vec3 random() {
+    return vec3(random_double(), random_double(), random_double());
+  };
+
+  inline static vec3 random(double min, double max) {
+    return vec3(random_double(min, max), random_double(min, max),
+                random_double(min, max));
+  };
 
   double e[3];
 };
@@ -64,5 +74,7 @@ inline vec3 cross(const vec3 &u, const vec3 &v) {
 }
 
 inline vec3 unit_vector(vec3 v) { return v / v.length(); }
+
+vec3 random_in_unit_sphere();
 
 #endif

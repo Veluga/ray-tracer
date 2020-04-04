@@ -6,10 +6,16 @@
 #include <cmath>
 #include <iostream>
 
-vec3 ray_color(const ray &r, hittable_list world) {
+vec3 ray_color(const ray &r, hittable_list world, int depth) {
   struct hit_record hit;
-  if (world.hit(r, 0, infinity, hit)) {
-    return 0.5 * (hit.normal + vec3(1, 1, 1));
+
+  if (depth <= 0) {
+    return vec3(0, 0, 0);
+  }
+
+  if (world.hit(r, 0.001, infinity, hit)) {
+    vec3 target = hit.p + hit.normal + random_in_unit_sphere();
+    return 0.5 * (ray_color(ray(hit.p, target - hit.p), world, depth - 1));
   } else {
     vec3 unit_direction = unit_vector(r.direction());
     auto t = 0.5 * (unit_direction.y() + 1.0);
@@ -18,9 +24,10 @@ vec3 ray_color(const ray &r, hittable_list world) {
 }
 
 int main() {
-  int image_width = 200;
-  int image_height = 100;
-  int samples_per_pixel = 100;
+  const int image_width = 200;
+  const int image_height = 100;
+  const int samples_per_pixel = 100;
+  const int max_depth = 50;
 
   std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 
@@ -41,7 +48,7 @@ int main() {
         auto u = (j + random_double()) / image_width;
         auto v = (i + random_double()) / image_height;
         ray r = cam.get_ray(u, v);
-        color += ray_color(r, world);
+        color += ray_color(r, world, max_depth);
       }
       color.write_color(std::cout, samples_per_pixel);
     }
