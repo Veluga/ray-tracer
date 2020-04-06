@@ -27,4 +27,15 @@ public:
   double fuzz;
 };
 
+// A material that never absorbs a ray but always scatters (e.g. glass)
+class dielectric : public material {
+public:
+  dielectric(double);
+  bool scatter(const ray &r_in, const hit_record &hit, vec3 &attenuation,
+               ray &scattered) const;
+  double ref_index;
+};
+
+double schlick(double, double);
+
 #endif

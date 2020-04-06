@@ -12,7 +12,7 @@ const double pi = 3.1415926535897932385;
 
 inline double degree_to_radians(double degrees) { return degrees * pi / 180; }
 
-inline double ffmain(double a, double b) { return a <= b ? a : b; }
+inline double ffmin(double a, double b) { return a <= b ? a : b; }
 inline double ffmax(double a, double b) { return a >= b ? a : b; }
 
 inline double random_double() {
