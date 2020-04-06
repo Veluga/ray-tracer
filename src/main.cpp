@@ -33,6 +33,7 @@ int main() {
   const int image_height = 100;
   const int samples_per_pixel = 100;
   const int max_depth = 50;
+  const auto aspect_ratio = double(image_width) / image_height;
 
   std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 
@@ -54,7 +55,13 @@ int main() {
                                      std::make_shared<dielectric>(1.5)));
   world.add(std::make_shared<sphere>(vec3(-1, 0, -1), -0.45,
                                      std::make_shared<dielectric>(1.5)));
-  camera cam;
+
+  vec3 lookfrom(3, 3, 2);
+  vec3 lookat(0, 0, -1);
+  vec3 vup(0, 1, 0);
+  auto dist_to_focus = (lookfrom - lookat).length();
+  auto aperture = 2.0;
+  camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
   for (int i = image_height - 1; i >= 0; i--) {
     std::cerr << "\nScanlines remaining: " << i << ' ' << std::flush;
     for (int j = 0; j < image_width; j++) {
