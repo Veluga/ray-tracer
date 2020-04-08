@@ -1,5 +1,5 @@
 CC := g++
-CFLAGS := -g -std=c++17
+CFLAGS := -g -std=c++17 -O2
 INCLUDE := include
 SRCDIR := src
 TARGET := bin/main
